@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using SteamKit2;
+
+namespace SteamBot
+{
+    // A class that can be extended to support on-going states of the current chat session
+    class GroupChat
+    {
+        string chatName;
+        SteamID chatId;
+
+        public chat(string chatName, SteamID chatId)
+        {
+            this.chatName = chatName;
+            this.chatId = chatId;
+        }
+
+        public void SetchatName(string chatName)
+        {
+            this.chatName = chatName;
+        }
+
+        public string GetchatName()
+        {
+            return chatName;
+        }
+
+        public void SetSteamID(SteamID chatId)
+        {
+            this.chatId = chatId;
+        }
+
+        public SteamID GetSteamID()
+        {
+            return chatId;
+        }
+    }
+}

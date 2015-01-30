@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Net;
 
 using SteamKit2;
 
@@ -10,8 +12,6 @@ namespace TAPBot
 {
     class Program
     {
-
-
         static SteamClient steamClient;
         static SteamUser steamUser;
         static bool isRunning;
@@ -43,10 +43,14 @@ namespace TAPBot
 
             new Callback<SteamClient.ConnectedCallback>(OnConnected, callbackManager);
             new Callback<SteamClient.DisconnectedCallback>(OnDisconnected, callbackManager);
+            
             new Callback<SteamUser.LoggedOnCallback>(OnLoggedOn, callbackManager);
             new Callback<SteamUser.LoggedOffCallback>(OnLoggedOff, callbackManager);
             new Callback<SteamUser.AccountInfoCallback>(OnAccountInfo, callbackManager);
-            new Callback<SteamFriends.PersonaStateCallback>(OnPersonaState, callbackManager);
+
+            new Callback<SteamFriends.ChatInviteCallback>(OnChatInvite, callbackManager);
+            new Callback<SteamFriends.ChatMsgCallback>(OnChatMsg, callbackManager);
+            new Callback<SteamFriends.FriendMsgCallback>(OnFriendMsg, callbackManager);
 
             isRunning = true;
 
@@ -117,17 +121,61 @@ namespace TAPBot
             Console.WriteLine("Logged off of Steam: {0}", callback.Result);
         }
 
-        static void OnPersonaState(SteamFriends.PersonaStateCallback callback)
+        static void OnChatMsg(SteamFriends.ChatMsgCallback callback)
         {
-
-            // a test to attempt to join a Steam group's chat and post a message.
-
-            ulong TAPlong = 103582791434637703;
-            Console.WriteLine("Doing stuff...");
-            SteamID TAPid = new SteamID(TAPlong);
-            steamFriends.JoinChat(TAPid);
-            steamFriends.SendChatRoomMessage(TAPid, EChatEntryType.ChatMsg, "Testing 1...2...3. Test complete.");
+            //Console.WriteLine(callback.Message);
         }
 
+        static void OnChatInvite(SteamFriends.ChatInviteCallback callback) 
+        { 
+            SteamID chatId = callback.ChatRoomID;
+            Console.WriteLine("Attempting to join " + callback.ChatRoomName + "...");
+            steamFriends.JoinChat(chatId);
+        }
+
+        static void OnFriendMsg(SteamFriends.FriendMsgCallback callback)
+        {
+            if (callback.EntryType == EChatEntryType.ChatMsg) {
+                Console.WriteLine(callback.Message);
+                string msg = callback.Message.Trim();
+                Regex joinCmd = new Regex(@"(!join)(\s+)(.+)");
+                Regex validSteamURL = new Regex(@"(http://)?(www\.)?(steamcommunity.com/groups/)([a-zA-Z0-9_]+)");
+                Match match = joinCmd.Match(msg);
+                Match urlMatch;
+
+                if (match.Success)
+                {
+                    urlMatch = validSteamURL.Match(match.Groups[3].Value);
+                    Console.WriteLine(match.Groups[3].Value);
+
+                    if (urlMatch.Success)
+                    {
+                        string html = new WebClient().DownloadString(match.Groups[3].Value);
+                        Regex joinChatExpr = new Regex(@".*(joinchat/)([0-9]+).*");
+                        Match htmlMatch = joinChatExpr.Match(html);
+                        Console.WriteLine("Second tier");
+
+                        if (htmlMatch.Success)
+                        {
+                            Console.WriteLine("Got chatID");
+                            ulong chatID = 0;
+                            if (UInt64.TryParse(htmlMatch.Groups[2].Value, out chatID))
+                            {
+                                Console.WriteLine("Entering chat...");
+                                SteamID groupChatID = new SteamID(chatID);
+                                steamFriends.JoinChat(groupChatID);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //ulong TAPlong = 103582791433348587;// 103582791434637703;
+            //Console.WriteLine("Doing stuff...");
+            //SteamID TAPid = new SteamID(TAPlong);
+            // steamFriends.JoinChat(TAPid);
+            //steamFriends.SendChatRoomMessage(TAPid, EChatEntryType.ChatMsg, "Testing 1...2...3. Test complete.");
+            
+        }
     }
 }
