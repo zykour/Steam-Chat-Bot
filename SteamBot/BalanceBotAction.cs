@@ -8,13 +8,11 @@ using System.IO.File;
 
 namespace SteamBot
 {
-    class BalanceBotAction
+    class BalanceBotAction : BotAction
     {
-        private string steamId;
-
-        public BalanceBotAction(string steamId)
+        public BalanceBotAction(string friendId, string chatId)
         {
-            this.steamId = steamId;
+            base(friendId, chatId);
         }
 
         public void Execute()
@@ -23,17 +21,13 @@ namespace SteamBot
             foreach (string line in lines)
             {
                 string[] postSplit = line.Split(' ');
-                if (postSplit.Length > 0)
+                if (postSplit.GetLength() > 0)
                 {
-                    if (postSplit[1].CompareTo(steamId) == 0)
+                    if (postSplit[1].CompareTo(friendId) == 0)
                     {
-
-                        //ulong TAPlong = 103582791433348587;// 103582791434637703;
-                        //Console.WriteLine("Doing stuff...");
-                        //SteamID TAPid = new SteamID(TAPlong);
-                        // steamFriends.JoinChat(TAPid);
-                        //steamFriends.SendChatRoomMessage(TAPid, EChatEntryType.ChatMsg, "Testing 1...2...3. Test complete.");
-
+                        results = postSplit[2] + ": " + postSplit[3];
+                        HasMessage = true;
+                        success = true;
                     }
                 }
             }

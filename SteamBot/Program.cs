@@ -12,6 +12,7 @@ namespace TAPBot
 {
     class Program
     {
+        static CommandFactory commandFactory;
         static SteamClient steamClient;
         static SteamUser steamUser;
         static bool isRunning;
@@ -26,6 +27,10 @@ namespace TAPBot
                 Console.WriteLine("Error: Incorrect number of arguments, two expected.");
                 return;
             }
+
+            // instantiate commandFactory used to create bot actions
+
+            commandFactory = new commandFactory()
 
             // grab command line arguments for logging into the bot's steam account
 
@@ -167,6 +172,10 @@ namespace TAPBot
                             }
                         }
                     }
+                }
+                else
+                {
+                    
                 }
             }
 

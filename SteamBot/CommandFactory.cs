@@ -8,35 +8,32 @@ namespace SteamBot
 {
     class CommandFactory
     {
-        string commandName;
-        string[] extras;
         bool hasExtras;
 
-        public CommandFactory(string commandName, string[] extras)
+        public CommandFactory()
         {
-            this.commandName = commandName;
-            this.extras = extras;
-            hasExtras = true;
-        }
-
-        public CommandFactory(string commandName)
-        {
-            this.commandName = commandName;
             hasExtras = false;
         }
 
-        public BotAction CreateBotAction()
+        public BotAction CreateBotAction(string[] arguments, string userId, string chatId)
         {
-            switch (commandName.ToLower())
+
+            if (arguments.GetLength() > 1)
             {
+                hasExtras = true;
+            }
+
+            switch (arguments[1].ToLower())
+            {
+                case "/balance":
                 case "!balance":
-                    return new BalanceBotAction(extras);
+                    return new BalanceBotAction(userId, chatId);
                     break;
                 default:
                     break;
             }
+         
             return null;
-        }
         }
     }
 }
