@@ -33,7 +33,7 @@ namespace SteamBot
         public BotAction(string friendId, string groupId)
         {
             this.friendId = friendId;
-            this.groupdId = groupId;
+            this.groupId = groupId;
             results = "";
             success = false;
             messageAvailable = false;

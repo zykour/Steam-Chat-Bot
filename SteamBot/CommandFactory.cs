@@ -18,17 +18,16 @@ namespace SteamBot
         public BotAction CreateBotAction(string[] arguments, string userId, string chatId)
         {
 
-            if (arguments.GetLength() > 1)
+            if (arguments.GetLength(1) > 1)
             {
                 hasExtras = true;
             }
 
-            switch (arguments[1].ToLower())
+            switch (arguments[1].ToLower().Trim())
             {
                 case "/balance":
                 case "!balance":
                     return new BalanceBotAction(userId, chatId);
-                    break;
                 default:
                     break;
             }

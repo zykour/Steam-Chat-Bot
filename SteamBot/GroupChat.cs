@@ -13,7 +13,7 @@ namespace SteamBot
         string chatName;
         SteamID chatId;
 
-        public chat(string chatName, SteamID chatId)
+        public GroupChat(string chatName, SteamID chatId)
         {
             this.chatName = chatName;
             this.chatId = chatId;

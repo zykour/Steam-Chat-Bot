@@ -8,7 +8,7 @@ using System.Net;
 
 using SteamKit2;
 
-namespace TAPBot
+namespace SteamBot
 {
     class Program
     {
@@ -30,7 +30,7 @@ namespace TAPBot
 
             // instantiate commandFactory used to create bot actions
 
-            commandFactory = new commandFactory()
+            commandFactory = new CommandFactory();
 
             // grab command line arguments for logging into the bot's steam account
 
@@ -129,6 +129,15 @@ namespace TAPBot
         static void OnChatMsg(SteamFriends.ChatMsgCallback callback)
         {
             //Console.WriteLine(callback.Message);
+            if (callback.Message.ToString().StartsWith("!") == true || callback.Message.ToString().StartsWith("/") == true)
+            {
+                BotAction botAction = commandFactory.CreateBotAction(callback.Message.Split(' '), callback.ChatterID.ToString(), callback.ChatRoomID.ToString());
+                botAction.Execute();
+                if (botAction.IsSuccessful()) 
+                {
+                    steamFriends.SendChatRoomMessage(callback.ChatRoomID, EChatEntryType.ChatMsg, botAction.ToString());
+                }
+            }
         }
 
         static void OnChatInvite(SteamFriends.ChatInviteCallback callback) 
