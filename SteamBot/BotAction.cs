@@ -9,8 +9,6 @@ namespace SteamBot
 {
     class BotAction
     {
-        protected string groupId;
-        protected string friendId;
         protected string results;
         protected bool success;
         protected bool messageAvailable;
@@ -22,41 +20,24 @@ namespace SteamBot
             messageAvailable = false;
         }
 
-        public BotAction(string groupId)
-        {
-            this.groupId = groupId;
-            results = "";
-            success = false;
-            messageAvailable = false;
-        }
-
-        public BotAction(string friendId, string groupId)
-        {
-            this.friendId = friendId;
-            this.groupId = groupId;
-            results = "";
-            success = false;
-            messageAvailable = false;
-        }
-
         public bool HasFriendID()
         {
-            return ( friendId != null ) ? true : false;
+            return false;
         }
 
         public string GetFriendID()
         {
-            return friendId;
+            return null;
         }
 
         public bool HasGroupChatID()
         {
-            return (groupId != null) ? true : false;
+            return false;
         }
 
         public string GetGroupChatID()
         {
-            return groupId;
+            return null;
         }
 
         public string ToString()
