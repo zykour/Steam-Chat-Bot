@@ -9,9 +9,9 @@ using System.Text.RegularExpressions;
 
 namespace SteamBot
 {
-    class BalanceBotAction : BotAction
+    class BalanceBotAction : ChatMsgBotAction
     {
-        public BalanceBotAction(string friendId, string chatId)
+        public BalanceBotAction(string friendId, string chatId) 
             : base(friendId, chatId)
         {
         }
@@ -20,12 +20,12 @@ namespace SteamBot
         {
             string[] balances = System.IO.File.ReadAllLines(@"C:\Users\zykour\Dropbox\TAP balance.txt");
 
+            // General format for balances is: Name     ##      SteamID
             Regex balanceCmd = new Regex(@"([^0-9]*)([0-9]+)(.*)");
 
             foreach (string line in balances)
             {
                 Match match = balanceCmd.Match(line);
-
 
                 if (match.Success)
                 {

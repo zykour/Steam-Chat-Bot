@@ -7,7 +7,7 @@ using SteamKit2;
 
 namespace SteamBot
 {
-    class FriendMsgBotAction
+    class FriendMsgBotAction : BotAction
     {
         protected string friendId;
 

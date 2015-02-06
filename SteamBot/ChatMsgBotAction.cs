@@ -7,7 +7,7 @@ using SteamKit2;
 
 namespace SteamBot
 {
-    class ChatMsgBotAction
+    class ChatMsgBotAction : BotAction
     {
         protected string groupId;
         protected string friendId;
@@ -21,6 +21,16 @@ namespace SteamBot
         public ChatMsgBotAction(SteamID groupId, SteamID friendId)
         {
             this.groupId = groupId.ToString();
+            this.friendId = friendId.ToString();
+        }
+
+        public ChatMsgBotAction(string friendId)
+        {
+            this.friendId = friendId;
+        }
+
+        public ChatMsgBotAction(SteamID friendId)
+        {
             this.friendId = friendId.ToString();
         }
 

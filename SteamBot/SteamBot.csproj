@@ -65,7 +65,7 @@
     <Compile Include="BalanceBotAction.cs" />
     <Compile Include="BotAction.cs" />
     <Compile Include="ChatMsgBotAction.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="FriendMsgBotAction.cs" />
     <Compile Include="CommandFactory.cs" />
     <Compile Include="Friend.cs" />
     <Compile Include="GroupChat.cs" />

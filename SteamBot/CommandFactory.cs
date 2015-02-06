@@ -8,30 +8,15 @@ namespace SteamBot
 {
     class CommandFactory
     {
-        bool hasExtras;
-
-        public CommandFactory()
+        public BotAction CreateBotAction(string command, string userId)
         {
-            hasExtras = false;
+            return CreateBotAction(command, userId, null);
         }
 
-        public BotAction CreateBotAction(string[] arguments, string userId, string chatId)
+        public BotAction CreateBotAction(string command, string userId, string chatId)
         {
-
-            if (arguments.GetLength(1) > 1)
-            {
-                hasExtras = true;
-            }
-
-            switch (arguments[1].ToLower().Trim())
-            {
-                case "/balance":
-                case "!balance":
-                    return new BalanceBotAction(userId, chatId);
-                default:
-                    break;
-            }
-         
+            if (command.StartsWith("!balance") == true)
+                return new BalanceBotAction(userId, chatId);
             return null;
         }
     }

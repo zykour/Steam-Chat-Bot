@@ -71,6 +71,19 @@ namespace SteamBot
             
         }
 
+        private static void HandleMessage(BotAction botAction)
+        {
+            if (botAction is FriendMsgBotAction)
+            {
+
+            }
+
+            if (botAction is ChatMsgBotAction)
+            {
+
+            }
+        }
+
         static void OnAccountInfo(SteamUser.AccountInfoCallback callback)
         {
             // set the Steam bots status to Online
@@ -128,14 +141,14 @@ namespace SteamBot
 
         static void OnChatMsg(SteamFriends.ChatMsgCallback callback)
         {
-            //Console.WriteLine(callback.Message);
-            if (callback.Message.ToString().StartsWith("!") == true || callback.Message.ToString().StartsWith("/") == true)
+            BotAction botAction = commandFactory.CreateBotAction(callback.Message.ToString(), callback.ChatterID.ToString(), callback.ChatRoomID.ToString());
+
+            if (botAction != null)
             {
-                BotAction botAction = commandFactory.CreateBotAction(callback.Message.Split(' '), callback.ChatterID.ToString(), callback.ChatRoomID.ToString());
                 botAction.Execute();
-                if (botAction.IsSuccessful()) 
+                if (botAction.IsSuccessful())
                 {
-                    steamFriends.SendChatRoomMessage(callback.ChatRoomID, EChatEntryType.ChatMsg, botAction.ToString());
+                    HandleMessage(botAction);
                 }
             }
         }
@@ -184,16 +197,18 @@ namespace SteamBot
                 }
                 else
                 {
-                    
-                }
-            }
+                    BotAction botAction = commandFactory.CreateBotAction(callback.Message.ToString(), callback.Sender.ToString());
 
-            //ulong TAPlong = 103582791433348587;// 103582791434637703;
-            //Console.WriteLine("Doing stuff...");
-            //SteamID TAPid = new SteamID(TAPlong);
-            // steamFriends.JoinChat(TAPid);
-            //steamFriends.SendChatRoomMessage(TAPid, EChatEntryType.ChatMsg, "Testing 1...2...3. Test complete.");
-            
+                    if (botAction != null)
+                    {
+                        botAction.Execute();
+                        if (botAction.IsSuccessful())
+                        {
+                            HandleMessage(botAction);
+                        }
+                    }
+                }
+            }            
         }
     }
 }
