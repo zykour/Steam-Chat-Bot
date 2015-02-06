@@ -26,29 +26,29 @@ namespace SteamBot
             friendId = null;
         }
 
-        public void SetFriendID(SteamID friendId)
+        public override void SetFriendID(SteamID friendId)
         {
             this.friendId = friendId.ToString();
         }
 
-        public void SetFriendID(string friendId)
+        public override void SetFriendID(string friendId)
         {
             this.friendId = friendId;
         }
 
-        public bool HasFriendID()
+        public override bool HasFriendID()
         {
             return (friendId != null) ? true : false;
         }
 
-        public string GetFriendID()
+        public override string GetFriendID()
         {
             return friendId;
         }
 
-        public SteamID GetFriendSteamID()
+        public override SteamID GetFriendSteamID()
         {
-            return new SteamID(friendId);
+            return new SteamID(UInt64.Parse(friendId));
         }
     }
 }

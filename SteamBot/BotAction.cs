@@ -20,27 +20,53 @@ namespace SteamBot
             messageAvailable = false;
         }
 
-        public bool HasFriendID()
+        public virtual void SetFriendID(SteamID friendId)
+        {
+        }
+
+        public virtual void SetFriendID(string friendId)
+        {
+        }
+
+        public virtual bool HasFriendID()
         {
             return false;
         }
 
-        public string GetFriendID()
+        public virtual string GetFriendID()
         {
             return null;
         }
 
-        public bool HasGroupChatID()
+        public virtual SteamID GetFriendSteamID()
+        {
+            return null;
+        }
+
+        public virtual void SetGroupChatSteamID(SteamID groupId)
+        {
+        }
+
+        public virtual void SetGroupChatSteamID(string groupId)
+        {
+        }
+
+        public virtual bool HasGroupChatID()
         {
             return false;
         }
 
-        public string GetGroupChatID()
+        public virtual string GetGroupChatID()
         {
             return null;
         }
 
-        public string ToString()
+        public virtual SteamID GetGroupChatSteamID()
+        {
+            return null;
+        }
+
+        public override string ToString()
         {
             return results;
         }
@@ -55,9 +81,9 @@ namespace SteamBot
             return messageAvailable;
         }
 
-        public void Execute()
+        public virtual void Execute()
         {
-
+            Console.WriteLine("Hello, from BotAction Execute!");
         }
     }
 }

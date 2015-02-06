@@ -9,13 +9,14 @@ using System.Text.RegularExpressions;
 
 namespace SteamBot
 {
-    class BalanceBotAction : ChatMsgBotAction
-    {
-        public BalanceBotAction(string friendId, string chatId) 
+    class QueenBotAction : ChatMsgBotAction {
+        
+        public QueenBotAction(string friendId, string chatId) 
             : base(friendId, chatId)
         {
         }
 
+        
         public override void Execute()
         {
             // General format for balances is: Name     ##      SteamID
@@ -26,6 +27,8 @@ namespace SteamBot
                 using (StreamReader sr = new StreamReader(@"C:\Users\zykour\Dropbox\TAP balance.txt"))
                 {
                     String line;
+                    int max = 0;
+                    string highestPoints = "";
 
                     while ((line = sr.ReadLine()) != null)
                     {
@@ -33,16 +36,18 @@ namespace SteamBot
 
                         if (match.Success)
                         {
-                            string matchedString = match.Groups[3].ToString().Trim();
-
-                            if (matchedString.CompareTo(friendId.Trim()) == 0)
+                            if (max < Int32.Parse(match.Groups[2].ToString().Trim())) 
                             {
-                                results = match.Groups[1].ToString().Trim() + ", your Co-op Shop balance is: " + match.Groups[2].ToString().Trim();
-                                messageAvailable = true;
-                                success = true;
+                                max = Int32.Parse(match.Groups[2].ToString().Trim());
+                                highestPoints = match.Groups[1].ToString().Trim();
+                                highestPoints = highestPoints.Substring(1);
                             }
                         }
                     }
+
+                    results = "Queen " + highestPoints + ", is winning with " + max + " points!";
+                    messageAvailable = true;
+                    success = true;
                 }
             }
             catch (Exception e)

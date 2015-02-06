@@ -12,13 +12,13 @@ namespace SteamBot
         protected string groupId;
         protected string friendId;
 
-        public ChatMsgBotAction(string groupId, string friendId)
+        public ChatMsgBotAction(string friendId, string groupId)
         {
             this.groupId = groupId;
             this.friendId = friendId;
         }
 
-        public ChatMsgBotAction(SteamID groupId, SteamID friendId)
+        public ChatMsgBotAction(SteamID friendId, SteamID groupId)
         {
             this.groupId = groupId.ToString();
             this.friendId = friendId.ToString();
@@ -40,54 +40,54 @@ namespace SteamBot
             friendId = null;
         }
 
-        public void SetFriendID(SteamID friendId)
+        public override void SetFriendID(SteamID friendId)
         {
             this.friendId = friendId.ToString();
         }
 
-        public void SetFriendID(string friendId)
+        public override void SetFriendID(string friendId)
         {
             this.friendId = friendId;
         }
 
-        public bool HasFriendID()
+        public override bool HasFriendID()
         {
             return ( friendId != null ) ? true : false;
         }
 
-        public string GetFriendID()
+        public override string GetFriendID()
         {
             return friendId;
         }
 
-        public SteamID GetFriendSteamID()
+        public override SteamID GetFriendSteamID()
         {
-            return new SteamID(friendId);
+            return new SteamID(UInt64.Parse(friendId));
         }
 
-        public void SetGroupID(SteamID groupId)
+        public override void SetGroupChatSteamID(SteamID groupId)
         {
             this.groupId = groupId.ToString();
         }
 
-        public void SetGroupID(string groupId)
+        public override void SetGroupChatSteamID(string groupId)
         {
             this.groupId = groupId;
         }
 
-        public bool HasGroupChatID()
+        public override bool HasGroupChatID()
         {
             return (groupId != null) ? true : false;
         }
 
-        public string GetGroupChatID()
+        public override string GetGroupChatID()
         {
             return groupId;
         }
         
-        public SteamID GetGroupSteamID()
+        public override SteamID GetGroupChatSteamID()
         {
-            return new SteamID(groupId);
+            return new SteamID(UInt64.Parse(groupId));
         }
     }
 }

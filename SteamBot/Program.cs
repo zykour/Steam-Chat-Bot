@@ -75,12 +75,19 @@ namespace SteamBot
         {
             if (botAction is FriendMsgBotAction)
             {
-
+                steamFriends.SendChatRoomMessage(botAction.GetFriendSteamID(), EChatEntryType.ChatMsg, botAction.ToString());
             }
 
             if (botAction is ChatMsgBotAction)
             {
-
+                if (botAction.HasGroupChatID())
+                {
+                    steamFriends.SendChatRoomMessage(botAction.GetGroupChatSteamID(), EChatEntryType.ChatMsg, botAction.ToString());
+                }
+                else
+                {
+                    steamFriends.SendChatRoomMessage(botAction.GetFriendSteamID(), EChatEntryType.ChatMsg, botAction.ToString());
+                }
             }
         }
 
@@ -141,12 +148,13 @@ namespace SteamBot
 
         static void OnChatMsg(SteamFriends.ChatMsgCallback callback)
         {
-            BotAction botAction = commandFactory.CreateBotAction(callback.Message.ToString(), callback.ChatterID.ToString(), callback.ChatRoomID.ToString());
+            Console.WriteLine(callback.Message);
+            BotAction botAction = commandFactory.CreateBotAction(callback.Message.Trim(), callback.ChatterID.ConvertToUInt64().ToString(), callback.ChatRoomID.ConvertToUInt64().ToString());
 
             if (botAction != null)
             {
                 botAction.Execute();
-                if (botAction.IsSuccessful())
+                if (botAction.IsSuccessful() && botAction.HasMessage())
                 {
                     HandleMessage(botAction);
                 }
@@ -163,49 +171,50 @@ namespace SteamBot
         static void OnFriendMsg(SteamFriends.FriendMsgCallback callback)
         {
             if (callback.EntryType == EChatEntryType.ChatMsg) {
-                Console.WriteLine(callback.Message);
-                string msg = callback.Message.Trim();
-                Regex joinCmd = new Regex(@"(!join)(\s+)(.+)");
-                Regex validSteamURL = new Regex(@"(http://)?(www\.)?(steamcommunity.com/groups/)([a-zA-Z0-9_]+)");
-                Match match = joinCmd.Match(msg);
-                Match urlMatch;
 
-                if (match.Success)
+                if (callback.Message.ToString().StartsWith("!join"))
                 {
-                    urlMatch = validSteamURL.Match(match.Groups[3].Value);
-                    Console.WriteLine(match.Groups[3].Value);
+                    string msg = callback.Message.Trim();
+                    Regex joinCmd = new Regex(@"(!join)(\s+)(.+)");
+                    Regex validSteamURL = new Regex(@"(http://)?(www\.)?(steamcommunity.com/groups/)([a-zA-Z0-9_]+)");
+                    Match match = joinCmd.Match(msg);
+                    Match urlMatch;
 
-                    if (urlMatch.Success)
+                    if (match.Success)
                     {
-                        string html = new WebClient().DownloadString(match.Groups[3].Value);
-                        Regex joinChatExpr = new Regex(@".*(joinchat/)([0-9]+).*");
-                        Match htmlMatch = joinChatExpr.Match(html);
-                        Console.WriteLine("Second tier");
+                        urlMatch = validSteamURL.Match(match.Groups[3].Value);
+                        Console.WriteLine(match.Groups[3].Value);
 
-                        if (htmlMatch.Success)
+                        if (urlMatch.Success)
                         {
-                            Console.WriteLine("Got chatID");
-                            ulong chatID = 0;
-                            if (UInt64.TryParse(htmlMatch.Groups[2].Value, out chatID))
+                            string html = new WebClient().DownloadString(match.Groups[3].Value);
+                            Regex joinChatExpr = new Regex(@".*(joinchat/)([0-9]+).*");
+                            Match htmlMatch = joinChatExpr.Match(html);
+                            Console.WriteLine("Second tier");
+
+                            if (htmlMatch.Success)
                             {
-                                Console.WriteLine("Entering chat...");
-                                SteamID groupChatID = new SteamID(chatID);
-                                steamFriends.JoinChat(groupChatID);
+                                Console.WriteLine("Got chatID");
+                                ulong chatID = 0;
+                                if (UInt64.TryParse(htmlMatch.Groups[2].Value, out chatID))
+                                {
+                                    Console.WriteLine("Entering chat...");
+                                    SteamID groupChatID = new SteamID(chatID);
+                                    steamFriends.JoinChat(groupChatID);
+                                }
                             }
                         }
                     }
                 }
-                else
-                {
-                    BotAction botAction = commandFactory.CreateBotAction(callback.Message.ToString(), callback.Sender.ToString());
 
-                    if (botAction != null)
+                BotAction botAction = commandFactory.CreateBotAction(callback.Message.ToString(), callback.Sender.ConvertToUInt64().ToString());
+
+                if (botAction != null)
+                {
+                    botAction.Execute();
+                    if (botAction.IsSuccessful() && botAction.HasMessage())
                     {
-                        botAction.Execute();
-                        if (botAction.IsSuccessful())
-                        {
-                            HandleMessage(botAction);
-                        }
+                        HandleMessage(botAction);
                     }
                 }
             }            
