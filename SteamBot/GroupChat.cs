@@ -10,8 +10,8 @@ namespace SteamBot
     // A class that can be extended to support on-going states of the current chat session
     class GroupChat
     {
-        string chatName;
-        SteamID chatId;
+        protected string chatName;
+        protected SteamID chatId;
 
         public GroupChat(string chatName, SteamID chatId)
         {
