@@ -65,6 +65,7 @@
     <Compile Include="BalanceBotAction.cs" />
     <Compile Include="BotAction.cs" />
     <Compile Include="ChatMsgBotAction.cs" />
+    <Compile Include="DailyDealAction.cs" />
     <Compile Include="FriendMsgBotAction.cs" />
     <Compile Include="CommandFactory.cs" />
     <Compile Include="Friend.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueenBotAction.cs" />
+    <Compile Include="RollAction.cs" />
     <Compile Include="TAPGroupChat.cs" />
   </ItemGroup>
   <ItemGroup>

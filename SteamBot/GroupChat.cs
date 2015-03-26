@@ -12,14 +12,14 @@ namespace SteamBot
     {
         protected string chatName;
         protected SteamID chatId;
-
+    
         public GroupChat(string chatName, SteamID chatId)
         {
             this.chatName = chatName;
             this.chatId = chatId;
         }
 
-        public void SetchatName(string chatName)
+        public void SetChatName(string chatName)
         {
             this.chatName = chatName;
         }

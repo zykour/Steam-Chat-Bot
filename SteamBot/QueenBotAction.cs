@@ -45,7 +45,7 @@ namespace SteamBot
                         }
                     }
 
-                    results = "Queen " + highestPoints + ", is winning with " + max + " points!";
+                    results = "Queen " + highestPoints + " is winning with " + max + " points!";
                     messageAvailable = true;
                     success = true;
                 }
