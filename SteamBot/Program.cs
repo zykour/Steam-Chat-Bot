@@ -157,7 +157,7 @@ namespace SteamBot
             // use the factory to get an appropriate object correlating to the action
             BotAction botAction = commandFactory.CreateBotAction(callback.Message.Trim(), callback.ChatterID.ConvertToUInt64().ToString(), callback.ChatRoomID.ConvertToUInt64().ToString());
 
-
+            // Since joining a chat requires the active SteamKit variables it's easier to parse the !join command here rather than passing it on to the commandfactory
             if (callback.Message.StartsWith("!join "))
             {
                 JoinChat(callback.Message.Trim());
@@ -181,6 +181,9 @@ namespace SteamBot
             Console.WriteLine("Attempting to join " + callback.ChatRoomName + "...");
             steamFriends.JoinChat(chatId);
         }
+
+        // this is an unclean way of letting users not on the bot's friend list invite the bot to a chat, via a '!join <url>' command
+        // grabs the group page in HTML and parses the page for the chat ID and joins the chat that way
 
         static void JoinChat(string msg)
         {
@@ -214,6 +217,7 @@ namespace SteamBot
             }
         }
 
+        // for joining chats on chat invite and for parsing friend message commands
         static void OnFriendMsg(SteamFriends.FriendMsgCallback callback)
         {
             if (callback.EntryType == EChatEntryType.ChatMsg) {
@@ -231,6 +235,7 @@ namespace SteamBot
                     botAction.Execute();
                     if (botAction.IsSuccessful() && botAction.HasMessage())
                     {
+                        // a small helper function to print out the message to the chat
                         HandleMessage(botAction);
                     }
                 }

@@ -9,7 +9,10 @@ namespace SteamBot
 {
     class ChatMsgBotAction : BotAction
     {
+        // holds the group chat ID of the group from which the incoming message came
         protected string groupId;
+
+        // holds the steam user ID of the user who sent the message
         protected string friendId;
 
         public ChatMsgBotAction(string friendId, string groupId)
