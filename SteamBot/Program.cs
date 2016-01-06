@@ -30,7 +30,6 @@ namespace SteamBot
 
             // instantiate commandFactory used to create bot actions
 
-            commandFactory = new CommandFactory();
 
             // grab command line arguments for logging into the bot's steam account
 
@@ -44,6 +43,7 @@ namespace SteamBot
             callbackManager = new CallbackManager(steamClient);
             steamFriends = steamClient.GetHandler<SteamFriends>();
 
+            commandFactory = new CommandFactory(steamFriends);
             // register callbacks we are interested in
 
             new Callback<SteamClient.ConnectedCallback>(OnConnected, callbackManager);
@@ -152,8 +152,6 @@ namespace SteamBot
 
         static void OnChatMsg(SteamFriends.ChatMsgCallback callback)
         {
-            // Write the incoming message to the console
-            Console.WriteLine(callback.Message);
             // use the factory to get an appropriate object correlating to the action
             BotAction botAction = commandFactory.CreateBotAction(callback.Message.Trim(), callback.ChatterID.ConvertToUInt64().ToString(), callback.ChatRoomID.ConvertToUInt64().ToString());
 

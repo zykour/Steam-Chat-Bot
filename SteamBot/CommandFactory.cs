@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SteamKit2;
 
 namespace SteamBot
 {
     class CommandFactory
     {
+        private SteamFriends steamFriends;
+
+        public CommandFactory (SteamFriends steamFriends)
+        {
+            this.steamFriends = steamFriends;
+        }
 
         public BotAction CreateBotAction(string command, string userId, string chatId)
         {
